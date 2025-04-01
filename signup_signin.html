@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 500px;
+            margin-top: 50px;
+        }
+        .form-container {
+            display: none;
+        }
+        .active-form {
+            display: block;
+        }
+        .btn-toggle {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center">Sign In / Sign Up</h2>
+    <div id="sign-up-form" class="form-container active-form">
+        <h3>Sign Up</h3>
+        <form method="POST" action="/sign_up">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+        <p class="text-center mt-2">Already have an account? <span class="btn-toggle" onclick="toggleForm('sign-in')">Sign In</span></p>
+    </div>
+
+    <div id="sign-in-form" class="form-container">
+        <h3>Sign In</h3>
+        <form method="POST" action="/sign_in">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email-signin" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password-signin" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </form>
+        <p class="text-center mt-2">Don't have an account? <span class="btn-toggle" onclick="toggleForm('sign-up')">Sign Up</span></p>
+    </div>
+</div>
+
+<script>
+    function toggleForm(formType) {
+        if (formType === 'sign-up') {
+            document.getElementById('sign-up-form').classList.add('active-form');
+            document.getElementById('sign-in-form').classList.remove('active-form');
+        } else if (formType === 'sign-in') {
+            document.getElementById('sign-in-form').classList.add('active-form');
+            document.getElementById('sign-up-form').classList.remove('active-form');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Preferences</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .selection-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .option {
+            background-color: #ddd;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
+            user-select: none;
+        }
+
+        .option:hover {
+            background-color: #bbb;
+        }
+
+        .option.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .option.no-focus {
+            background-color: #ff6666;
+        }
+
+        .option.no-focus.selected {
+            background-color: #d9534f;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Personalize Your Training</h2>
+
+        <!-- Joint Issues -->
+        <div class="question">Which joint(s) are you uncomfortable exercising?</div>
+        <div class="selection-group">
+            <div class="option" onclick="toggleSelection(this, 'Shoulder', 'joints')">Shoulder</div>
+            <div class="option" onclick="toggleSelection(this, 'Knee', 'joints')">Knee</div>
+            <div class="option" onclick="toggleSelection(this, 'Elbow', 'joints')">Elbow</div>
+            <div class="option" onclick="toggleSelection(this, 'Ankle', 'joints')">Ankle</div>
+            <div class="option no-focus" onclick="selectNone('joints')">No Issues</div>
+        </div>
+
+        <!-- Fitness Goal -->
+        <div class="question">What is your goal?</div>
+        <select id="goal" onchange="validateForm()">
+            <option value="">Select a goal</option>
+            <option value="Lose Weight">Lose Weight</option>
+            <option value="Gain Muscle">Gain Muscle</option>
+            <option value="Increase Strength">Increase Strength</option>
+            <option value="Athletic Performance">Athletic Performance</option>
+            <option value="General Fitness">General Fitness</option>
+        </select>
+
+        <!-- Targeted Body Parts -->
+        <div class="question">Any body part you want to focus on?</div>
+        <div class="selection-group">
+            <div class="option" onclick="toggleSelection(this, 'Arms', 'bodyParts')">Arms</div>
+            <div class="option" onclick="toggleSelection(this, 'Legs', 'bodyParts')">Legs</div>
+            <div class="option" onclick="toggleSelection(this, 'Core', 'bodyParts')">Core</div>
+            <div class="option" onclick="toggleSelection(this, 'Chest', 'bodyParts')">Chest</div>
+            <div class="option" onclick="toggleSelection(this, 'Back', 'bodyParts')">Back</div>
+            <div class="option no-focus" onclick="selectNone('bodyParts')">Nothing Specific</div>
+        </div>
+
+        <!-- Training Days -->
+        <div class="question">How many days per week will you train?</div>
+        <select id="trainingDays" onchange="validateForm()">
+            <option value="">Select days</option>
+            <option value="1">1 Day</option>
+            <option value="2">2 Days</option>
+            <option value="3">3 Days</option>
+            <option value="4">4 Days</option>
+            <option value="5">5 Days</option>
+            <option value="6">6 Days</option>
+            <option value="7">7 Days</option>
+        </select>
+
+        <button id="continueBtn" disabled onclick="submitForm()">Continue</button>
+    </div>
+
+    <script>
+        let selectedJoints = [];
+        let selectedBodyParts = [];
+
+        function toggleSelection(element, value, type) {
+            let array = type === 'joints' ? selectedJoints : selectedBodyParts;
+            const index = array.indexOf(value);
+
+            if (index === -1) {
+                array.push(value);
+                element.classList.add("selected");
+            } else {
+                array.splice(index, 1);
+                element.classList.remove("selected");
+            }
+
+            document.querySelector(`.option.no-focus[data-type="${type}"]`)?.classList.remove("selected");
+        }
+
+        function selectNone(type) {
+            if (type === 'joints') selectedJoints = ["None"];
+            if (type === 'bodyParts') selectedBodyParts = ["None"];
+
+            document.querySelectorAll(`.option[data-type="${type}"]`).forEach(el => el.classList.remove("selected"));
+            document.querySelector(`.option.no-focus[data-type="${type}"]`).classList.add("selected");
+        }
+
+        function validateForm() {
+            let goal = document.getElementById("goal").value;
+            let trainingDays = document.getElementById("trainingDays").value;
+            document.getElementById("continueBtn").disabled = !(goal && trainingDays);
+        }
+
+        function submitForm() {
+            let goal = document.getElementById("goal").value;
+            let trainingDays = document.getElementById("trainingDays").value;
+
+            let userData = {
+                joints: selectedJoints,
+                goal: goal,
+                bodyParts: selectedBodyParts,
+                trainingDays: trainingDays
+            };
+
+            console.log("User Data:", userData);
+            alert("Data submitted! Check console for details.");
+        }
+    </script>
+
+</body>
+</html>
